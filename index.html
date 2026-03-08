@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Heena & Azaz — Wedding Reception</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#fdf6ed; --cream2:#f7ede0;
+  --gold:#c9a84c;  --gold2:#e2c06b; --gold3:#f5dfa0;
+  --green:#5a7f5a; --green2:#7aab7a;
+  --dark:#2a2318;  --soft:#8b7355;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden;min-height:100vh}
+
+/* ── FLOATING PARTICLES ── */
+#ptc{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.pt{position:absolute;border-radius:50%;opacity:0;animation:ptUp linear infinite}
+@keyframes ptUp{
+  0%  {transform:translateY(100vh) translateX(0) scale(0);opacity:0}
+  10% {opacity:.7}
+  90% {opacity:.3}
+  100%{transform:translateY(-10vh) translateX(var(--d)) scale(1.5);opacity:0}
+}
+
+/* ── GATE SCREEN ── */
+#gate{
+  position:fixed;inset:0;z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 40%, #ede0c4 0%, #c8a870 45%, #7a5528 100%);
+  overflow:hidden;transition:opacity 1.2s ease
+}
+#gate.gone{opacity:0;pointer-events:none}
+
+/* stars */
+.star{position:absolute;background:#fff;border-radius:50%;box-shadow:0 0 6px #fff8d0;animation:twk ease-in-out infinite}
+@keyframes twk{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:1;transform:scale(1.5)}}
+
+/* clouds */
+.cloud{position:absolute;background:rgba(255,255,255,.5);border-radius:60px;filter:blur(20px);animation:driftC linear infinite}
+@keyframes driftC{0%{transform:translateX(-130%)}100%{transform:translateX(120vw)}}
+
+/* doors */
+.gate-wrap{position:relative;display:flex;flex-direction:column;align-items:center;z-index:10}
+.doors{
+  display:flex;position:relative;
+  width:min(300px,78vw);height:min(400px,62vh);
+  margin-bottom:32px;perspective:1000px
+}
+.door{
+  flex:1;
+  background:linear-gradient(155deg,#f7ead4 0%,#d9a85c 45%,#9a6822 100%);
+  border:2px solid var(--gold);
+  position:relative;overflow:hidden;
+  transition:transform 2.4s cubic-bezier(.23,1,.32,1);
+  transform-origin:left center;transform-style:preserve-3d;
+  box-shadow:inset -4px 0 22px rgba(0,0,0,.28),4px 0 28px rgba(0,0,0,.38)
+}
+.door.r{transform-origin:right center;box-shadow:inset 4px 0 22px rgba(0,0,0,.28),-4px 0 28px rgba(0,0,0,.38)}
+.door::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(201,168,76,.18) 0,rgba(201,168,76,.18) 1px,transparent 0,transparent 14px),repeating-linear-gradient(-45deg,rgba(201,168,76,.18) 0,rgba(201,168,76,.18) 1px,transparent 0,transparent 14px)}
+.knob{position:absolute;width:13px;height:13px;background:radial-gradient(circle at 35% 35%,#fff8dc,var(--gold) 55%,#7a5500);border-radius:50%;top:50%;transform:translateY(-50%);box-shadow:0 2px 7px rgba(0,0,0,.5)}
+.door .knob{right:7px}.door.r .knob{left:7px}
+.arch{
+  position:absolute;inset:-16px -16px -8px;
+  border:4px solid var(--gold);
+  border-radius:140px 140px 8px 8px / 180px 180px 8px 8px;
+  box-shadow:0 0 36px rgba(201,168,76,.7),inset 0 0 18px rgba(201,168,76,.2);
+  pointer-events:none;z-index:5
+}
+.arch::before{content:'☽';position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:30px;color:var(--gold2);text-shadow:0 0 16px var(--gold)}
+#burst{
+  position:absolute;inset:-80px;
+  background:radial-gradient(circle at center,rgba(255,255,220,.98) 0%,rgba(255,240,160,.55) 30%,transparent 68%);
+  opacity:0;pointer-events:none;border-radius:50%;transform:scale(.2);
+  transition:opacity .5s ease,transform .9s ease;z-index:20
+}
+#burst.on{opacity:1;transform:scale(5)}
+
+/* gate text */
+.g-arabic{font-family:'Amiri',serif;font-size:clamp(18px,5vw,26px);color:var(--gold2);text-shadow:0 0 22px rgba(201,168,76,.8);text-align:center;letter-spacing:2px;margin-bottom:6px;animation:gPulse 3s ease-in-out infinite}
+@keyframes gPulse{0%,100%{opacity:.8}50%{opacity:1}}
+.g-sub{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(12px,3.2vw,16px);color:#f0d9a8;text-align:center;margin-bottom:30px;letter-spacing:1px}
+#openBtn{
+  background:linear-gradient(135deg,#c9a84c 0%,#e2c06b 50%,#c9a84c 100%);
+  border:none;padding:14px 42px;
+  font-family:'Playfair Display',serif;font-size:clamp(14px,4vw,18px);font-weight:600;
+  color:#2a1a00;border-radius:50px;cursor:pointer;
+  letter-spacing:2px;position:relative;overflow:hidden;
+  box-shadow:0 4px 26px rgba(201,168,76,.65),0 0 0 2px rgba(201,168,76,.3);
+  transition:transform .2s
+}
+#openBtn::before{content:'';position:absolute;top:-50%;left:-60%;width:50%;height:200%;background:rgba(255,255,255,.28);transform:skewX(-20deg);animation:shim 3s infinite}
+@keyframes shim{0%{left:-60%}100%{left:140%}}
+#openBtn:active{transform:scale(.97)}
+
+/* ── MAIN INVITE ── */
+#inv{display:none;position:relative;z-index:1}
+#inv.show{display:block;animation:invIn 1.4s ease both}
+@keyframes invIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+/* geo bg */
+.geo{position:fixed;inset:0;z-index:-1;opacity:.065;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1'%3E%3Crect x='10' y='10' width='60' height='60' rx='2' transform='rotate(45 40 40)'/%3E%3Crect x='20' y='20' width='40' height='40' rx='2' transform='rotate(45 40 40)'/%3E%3Ccircle cx='40' cy='40' r='25'/%3E%3Ccircle cx='40' cy='40' r='15'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:80px 80px}
+
+.sec{max-width:520px;margin:0 auto;padding:40px 20px;text-align:center}
+
+/* ── HERO ── */
+.hero{padding:60px 20px 36px;background:linear-gradient(180deg,rgba(201,168,76,.13) 0%,transparent 100%);position:relative}
+.bismillah{font-family:'Amiri',serif;font-size:clamp(22px,6vw,32px);color:var(--gold);margin-bottom:10px;text-shadow:0 0 22px rgba(201,168,76,.45);animation:sDown 1s ease .3s both}
+.invite-lbl{font-family:'Poppins',sans-serif;font-size:clamp(9px,2.3vw,12px);font-weight:600;color:var(--green);letter-spacing:4px;text-transform:uppercase;margin-bottom:26px;animation:sDown 1s ease .5s both}
+@keyframes sDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:none}}
+@keyframes sUp  {from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none}}
+
+/* couple names */
+.names{position:relative;margin:16px 0 28px;animation:sDown 1s ease .7s both}
+.bride,.groom{
+  font-family:'Playfair Display',serif;font-size:clamp(30px,8.5vw,52px);font-weight:700;line-height:1.1;
+  background:linear-gradient(135deg,#8b6a3a 0%,var(--gold) 50%,#8b6a3a 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.heart{font-size:28px;color:#c0705a;display:block;margin:6px 0;animation:hb 1.5s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(192,112,90,.55))}
+@keyframes hb{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
+.sparkles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.sp{position:absolute;width:5px;height:5px;background:var(--gold2);border-radius:50%;box-shadow:0 0 8px var(--gold2);animation:spPop ease-in-out infinite}
+@keyframes spPop{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}}
+
+/* gold divider */
+.gdiv{width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 28px;position:relative}
+.gdiv::before{content:'✦';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--gold);font-size:12px;background:var(--cream);padding:0 6px}
+
+/* minarets */
+.minarets{display:flex;justify-content:center;align-items:flex-end;gap:6px;padding:12px 0 0;opacity:.22}
+.minarets svg{width:28px;height:auto}
+
+/* ── CARDS ── */
+.card{
+  background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(253,246,237,.65));
+  border:1px solid rgba(201,168,76,.38);border-radius:18px;
+  padding:34px 26px;position:relative;
+  backdrop-filter:blur(12px);
+  box-shadow:0 8px 44px rgba(201,168,76,.11),0 2px 10px rgba(0,0,0,.05);
+  animation:sUp 1s ease .4s both
+}
+.card::before,.card::after{content:'';position:absolute;width:48px;height:48px;border:2px solid rgba(201,168,76,.45)}
+.card::before{top:-2px;left:-2px;border-right:none;border-bottom:none;border-radius:4px 0 0 0}
+.card::after {bottom:-2px;right:-2px;border-left:none;border-top:none;border-radius:0 0 4px 0}
+
+.tag{font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+.ev-title{font-family:'Playfair Display',serif;font-size:clamp(22px,6vw,30px);font-weight:700;color:var(--dark);margin-bottom:14px}
+.ev-date{font-family:'Amiri',serif;font-size:clamp(18px,5vw,24px);color:var(--gold);letter-spacing:1px}
+.ev-day{font-size:12px;color:var(--soft);margin-top:4px}
+
+/* venue card */
+.vcard{
+  background:linear-gradient(135deg,rgba(90,127,90,.09),rgba(90,127,90,.03));
+  border:1px solid rgba(90,127,90,.28);border-radius:18px;
+  padding:28px 24px;animation:sUp 1s ease .5s both
+}
+.vlbl{font-size:10px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.vname{font-family:'Playfair Display',serif;font-size:clamp(20px,5.5vw,26px);font-weight:700;color:var(--dark);margin-bottom:6px}
+.vaddr{font-size:14px;color:var(--soft);margin-bottom:20px}
+.dir-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--green);color:#fff;text-decoration:none;
+  padding:12px 28px;border-radius:50px;font-size:14px;font-weight:500;
+  letter-spacing:1px;box-shadow:0 4px 20px rgba(90,127,90,.38);
+  transition:transform .2s,box-shadow .2s
+}
+.dir-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(90,127,90,.48)}
+
+/* ── COUNTDOWN ── */
+.cd-sec{animation:sUp 1s ease .6s both}
+.cd-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(15px,3.8vw,19px);color:var(--soft);margin-bottom:24px}
+.cd-grid{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.cd-box{
+  background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(253,246,237,.75));
+  border:1px solid rgba(201,168,76,.28);border-radius:14px;
+  padding:20px 14px;min-width:70px;
+  box-shadow:0 4px 16px rgba(201,168,76,.1)
+}
+.cd-num{font-family:'Playfair Display',serif;font-size:clamp(28px,8vw,40px);font-weight:700;color:var(--gold);line-height:1;display:block;transition:transform .3s}
+.cd-num.flip{animation:flip .4s ease}
+@keyframes flip{0%{transform:rotateX(0);opacity:1}50%{transform:rotateX(-90deg);opacity:0}100%{transform:rotateX(0);opacity:1}}
+.cd-lbl{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-top:5px}
+
+/* ── WISHES FORM ── */
+.wf-sec{animation:sUp 1s ease .7s both}
+.sh{font-family:'Playfair Display',serif;font-size:clamp(20px,5.5vw,26px);font-weight:700;color:var(--dark);margin-bottom:8px}
+.ssub{font-size:13px;color:var(--soft);margin-bottom:22px}
+.wform{background:rgba(255,255,255,.72);border:1px solid rgba(201,168,76,.25);border-radius:18px;padding:28px 22px;backdrop-filter:blur(8px)}
+.fg{margin-bottom:16px;text-align:left}
+.fg label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--soft);display:block;margin-bottom:6px}
+.fg input,.fg textarea{
+  width:100%;background:rgba(253,246,237,.85);
+  border:1px solid rgba(201,168,76,.32);border-radius:10px;
+  padding:12px 16px;font-family:'Poppins',sans-serif;font-size:14px;color:var(--dark);
+  outline:none;resize:none;transition:border-color .2s,box-shadow .2s
+}
+.fg input:focus,.fg textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.14)}
+.sub-btn{
+  width:100%;background:linear-gradient(135deg,#c9a84c,#e2c06b,#c9a84c);
+  border:none;padding:14px;border-radius:50px;
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:600;
+  color:#2a1a00;cursor:pointer;letter-spacing:2px;
+  box-shadow:0 4px 20px rgba(201,168,76,.4);transition:transform .2s,box-shadow .2s
+}
+.sub-btn:hover{transform:translateY(-2px);box-shadow:0 6px 26px rgba(201,168,76,.5)}
+.sub-btn:disabled{opacity:.6;cursor:default;transform:none}
+#wsuccess{
+  display:none;background:rgba(90,127,90,.1);border:1px solid rgba(90,127,90,.3);
+  border-radius:14px;padding:22px;text-align:center;color:var(--green);
+  font-family:'Playfair Display',serif;font-style:italic;font-size:16px;margin-top:16px
+}
+
+/* ── SKYLINE ── */
+.skyline{width:100%;overflow:hidden;margin-top:16px;opacity:.18}
+.skyline svg{width:100%;height:auto;display:block}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:40px 20px 64px}
+.moon{font-size:42px;display:block;margin:0 auto 16px;animation:mGlow 4s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(201,168,76,.6))}
+@keyframes mGlow{0%,100%{filter:drop-shadow(0 0 8px rgba(201,168,76,.4));transform:translateY(0)}50%{filter:drop-shadow(0 0 22px rgba(201,168,76,.85));transform:translateY(-6px)}}
+.f-arabic{font-family:'Amiri',serif;font-size:22px;color:var(--gold);margin-bottom:10px}
+.f-text{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--soft)}
+.ornament{color:var(--gold);font-size:16px;letter-spacing:8px;margin:14px 0;opacity:.6}
+
+/* ── SCROLL FADE ── */
+.fi{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.fi.vis{opacity:1;transform:none}
+
+/* ── MUSIC BTN ── */
+#mBtn{
+  position:fixed;bottom:22px;right:22px;z-index:300;
+  background:rgba(201,168,76,.92);border:none;
+  width:48px;height:48px;border-radius:50%;
+  font-size:20px;cursor:pointer;
+  box-shadow:0 4px 18px rgba(201,168,76,.55);
+  display:none;align-items:center;justify-content:center;
+  transition:transform .2s
+}
+#mBtn.show{display:flex}
+#mBtn:hover{transform:scale(1.1)}
+</style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<div id="ptc"></div>
+
+<!-- ══════════════════════════════════
+     HEAVEN GATE SCREEN
+══════════════════════════════════ -->
+<div id="gate">
+  <div id="starsWrap"></div>
+  <!-- clouds -->
+  <div class="cloud" style="width:280px;height:72px;top:10%;left:-20%;animation-duration:30s;animation-delay:0s"></div>
+  <div class="cloud" style="width:190px;height:54px;top:20%;left:-20%;animation-duration:22s;animation-delay:7s"></div>
+  <div class="cloud" style="width:320px;height:84px;top:6%; left:-20%;animation-duration:38s;animation-delay:14s"></div>
+  <div class="cloud" style="width:210px;height:60px;top:68%;left:-20%;animation-duration:26s;animation-delay:4s"></div>
+  <div class="cloud" style="width:160px;height:46px;top:78%;left:-20%;animation-duration:20s;animation-delay:10s"></div>
+
+  <div class="gate-wrap">
+    <div class="g-arabic">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+    <div class="g-sub">In the name of Allah, the Most Gracious, the Most Merciful</div>
+
+    <div class="doors" id="doors">
+      <div class="arch"></div>
+      <div class="door" id="dL"><div class="knob"></div></div>
+      <div class="door r" id="dR"><div class="knob"></div></div>
+      <div id="burst"></div>
+    </div>
+
+    <button id="openBtn" onclick="openDoors()">✦ Open Invitation ✦</button>
+  </div>
+</div>
+
+<!-- MUSIC BUTTON -->
+<button id="mBtn" onclick="toggleMusic()" title="Toggle ambient music">🎵</button>
+
+<!-- ══════════════════════════════════
+     MAIN INVITATION
+══════════════════════════════════ -->
+<div id="inv">
+  <div class="geo"></div>
+
+  <!-- HERO -->
+  <div class="hero sec">
+    <div class="bismillah">بِسْمِ اللَّٰهِ</div>
+    <div class="invite-lbl">Together with their families</div>
+
+    <div class="names">
+      <div class="sparkles" id="spkWrap"></div>
+      <div class="bride">Heena Sejavtawala</div>
+      <span class="heart">♥</span>
+      <div class="groom">Azaz Vepari</div>
+    </div>
+
+    <div class="invite-lbl" style="margin-top:14px;margin-bottom:0">joyfully invite you to their</div>
+
+    <!-- minarets -->
+    <div class="minarets">
+      <svg viewBox="0 0 30 70"><rect x="12" y="50" width="6" height="20" fill="#c9a84c"/><rect x="8" y="35" width="14" height="16" rx="2" fill="#c9a84c"/><ellipse cx="15" cy="34" rx="8" ry="6" fill="#c9a84c"/><rect x="13" y="10" width="4" height="25" fill="#c9a84c"/><ellipse cx="15" cy="10" rx="4" ry="3" fill="#c9a84c"/><ellipse cx="15" cy="8" rx="2" ry="2" fill="#e2c06b"/></svg>
+      <svg viewBox="0 0 30 90"><rect x="11" y="60" width="8" height="30" fill="#c9a84c"/><rect x="7" y="42" width="16" height="19" rx="2" fill="#c9a84c"/><ellipse cx="15" cy="41" rx="9" ry="7" fill="#c9a84c"/><rect x="13" y="12" width="4" height="30" fill="#c9a84c"/><ellipse cx="15" cy="12" rx="5" ry="4" fill="#c9a84c"/><ellipse cx="15" cy="9" rx="2.5" ry="2.5" fill="#e2c06b"/></svg>
+      <svg viewBox="0 0 40 110"><rect x="16" y="75" width="8" height="35" fill="#c9a84c"/><rect x="10" y="52" width="20" height="24" rx="3" fill="#c9a84c"/><ellipse cx="20" cy="51" rx="12" ry="9" fill="#c9a84c"/><rect x="17" y="14" width="6" height="38" fill="#c9a84c"/><ellipse cx="20" cy="14" rx="6" ry="5" fill="#c9a84c"/><ellipse cx="20" cy="10" rx="3" ry="3" fill="#e2c06b"/></svg>
+      <svg viewBox="0 0 30 90"><rect x="11" y="60" width="8" height="30" fill="#c9a84c"/><rect x="7" y="42" width="16" height="19" rx="2" fill="#c9a84c"/><ellipse cx="15" cy="41" rx="9" ry="7" fill="#c9a84c"/><rect x="13" y="12" width="4" height="30" fill="#c9a84c"/><ellipse cx="15" cy="12" rx="5" ry="4" fill="#c9a84c"/><ellipse cx="15" cy="9" rx="2.5" ry="2.5" fill="#e2c06b"/></svg>
+      <svg viewBox="0 0 30 70"><rect x="12" y="50" width="6" height="20" fill="#c9a84c"/><rect x="8" y="35" width="14" height="16" rx="2" fill="#c9a84c"/><ellipse cx="15" cy="34" rx="8" ry="6" fill="#c9a84c"/><rect x="13" y="10" width="4" height="25" fill="#c9a84c"/><ellipse cx="15" cy="10" rx="4" ry="3" fill="#c9a84c"/><ellipse cx="15" cy="8" rx="2" ry="2" fill="#e2c06b"/></svg>
+    </div>
+  </div>
+
+  <!-- EVENT DETAILS -->
+  <div class="sec fi">
+    <div class="card">
+      <div class="tag">✦ You are cordially invited to ✦</div>
+      <div class="ev-title">Wedding Reception</div>
+      <div class="gdiv"></div>
+      <div class="ev-date">Wednesday, 1st April 2026</div>
+      <div class="ev-day">Evening Celebration</div>
+    </div>
+  </div>
+
+  <!-- VENUE -->
+  <div class="sec fi">
+    <div class="vcard">
+      <div class="vlbl">📍 Venue</div>
+      <div class="vname">Zaveri Hall</div>
+      <div class="vaddr">Paldi, Ahmedabad</div>
+      <a class="dir-btn" href="https://share.google/riVQd6QQuD4Lhy7rY" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Get Directions
+      </a>
+    </div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="sec fi cd-sec">
+    <div class="ornament">✦ ✦ ✦</div>
+    <div class="cd-title">The celebration begins in…</div>
+    <div class="cd-grid">
+      <div class="cd-box"><span class="cd-num" id="cdD">00</span><div class="cd-lbl">Days</div></div>
+      <div class="cd-box"><span class="cd-num" id="cdH">00</span><div class="cd-lbl">Hours</div></div>
+      <div class="cd-box"><span class="cd-num" id="cdM">00</span><div class="cd-lbl">Minutes</div></div>
+      <div class="cd-box"><span class="cd-num" id="cdS">00</span><div class="cd-lbl">Seconds</div></div>
+    </div>
+  </div>
+
+  <!-- SEND WISHES -->
+  <div class="sec fi wf-sec">
+    <div class="gdiv" style="margin-bottom:20px"></div>
+    <div class="sh">Send Your Wishes</div>
+    <div class="ssub">Leave a heartfelt message for the couple 💐</div>
+    <div class="wform">
+      <div class="fg">
+        <label>Your Name</label>
+        <input type="text" id="wName" placeholder="Enter your name…" maxlength="60"/>
+      </div>
+      <div class="fg">
+        <label>Your Message</label>
+        <textarea id="wMsg" rows="4" placeholder="Write your warm wishes here…" maxlength="500"></textarea>
+      </div>
+      <button class="sub-btn" id="subBtn" onclick="sendWish()">Send Wishes ✦</button>
+    </div>
+    <div id="wsuccess">💐 Jazak Allah Khair! Your wishes have been sent with love.</div>
+  </div>
+
+  <!-- AHMEDABAD SKYLINE -->
+  <div class="sec">
+    <div class="skyline">
+      <svg viewBox="0 0 500 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="100" width="500" height="20" fill="#c9a84c"/>
+        <rect x="0" y="72" width="38" height="28" fill="#a87832"/><rect x="38" y="56" width="28" height="44" fill="#8b6a3a"/><rect x="66" y="66" width="24" height="34" fill="#a87832"/><rect x="90" y="46" width="20" height="54" fill="#8b6a3a"/>
+        <rect x="128" y="63" width="50" height="37" fill="#c9a84c"/><ellipse cx="153" cy="62" rx="22" ry="16" fill="#e2c06b"/><rect x="128" y="40" width="8" height="30" fill="#c9a84c"/><ellipse cx="132" cy="38" rx="5" ry="4" fill="#e2c06b"/><rect x="170" y="40" width="8" height="30" fill="#c9a84c"/><ellipse cx="174" cy="38" rx="5" ry="4" fill="#e2c06b"/>
+        <rect x="193" y="73" width="22" height="27" fill="#a87832"/><rect x="215" y="59" width="18" height="41" fill="#8b6a3a"/><rect x="233" y="69" width="28" height="31" fill="#a87832"/>
+        <rect x="261" y="39" width="16" height="61" fill="#8b6a3a"/><rect x="277" y="51" width="22" height="49" fill="#a87832"/>
+        <rect x="308" y="66" width="45" height="34" fill="#c9a84c"/><ellipse cx="330" cy="65" rx="18" ry="13" fill="#e2c06b"/><rect x="309" y="44" width="7" height="29" fill="#c9a84c"/><ellipse cx="312" cy="42" rx="4" ry="3" fill="#e2c06b"/><rect x="346" y="44" width="7" height="29" fill="#c9a84c"/><ellipse cx="349" cy="42" rx="4" ry="3" fill="#e2c06b"/>
+        <rect x="358" y="61" width="25" height="39" fill="#a87832"/><rect x="383" y="73" width="20" height="27" fill="#8b6a3a"/><rect x="403" y="56" width="30" height="44" fill="#a87832"/><rect x="433" y="69" width="35" height="31" fill="#8b6a3a"/><rect x="468" y="76" width="32" height="24" fill="#a87832"/>
+        <circle cx="448" cy="26" r="14" fill="#e2c06b" opacity=".55"/><circle cx="457" cy="23" r="11" fill="#f7ede0" opacity=".5"/>
+        <circle cx="408" cy="18" r="2" fill="#e2c06b" opacity=".8"/><circle cx="378" cy="10" r="1.5" fill="#e2c06b" opacity=".6"/><circle cx="468" cy="8" r="2" fill="#e2c06b" opacity=".7"/><circle cx="32" cy="16" r="1.5" fill="#e2c06b" opacity=".6"/><circle cx="82" cy="8" r="2" fill="#e2c06b" opacity=".7"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer fi">
+    <span class="moon">🌙</span>
+    <div class="f-arabic">جَزَاكَ ٱللَّٰهُ خَيْرًا</div>
+    <div class="f-text">May Allah bless this union with love, peace &amp; happiness</div>
+    <div class="ornament" style="margin-top:20px">✦ &nbsp; Heena &amp; Azaz &nbsp; ✦</div>
+    <div style="font-size:11px;color:var(--soft);margin-top:10px;letter-spacing:2px">1 APRIL 2026 · AHMEDABAD</div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   CONFIG — 🔁 Replace this with your Apps Script URL
+══════════════════════════════════════════════════ */
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+/* ══════════════════════════════════════
+   PARTICLES
+══════════════════════════════════════ */
+(function(){
+  const c = document.getElementById('ptc');
+  for(let i=0;i<30;i++){
+    const p=document.createElement('div'); p.className='pt';
+    const sz=2+Math.random()*4;
+    p.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;
+      animation-duration:${8+Math.random()*14}s;animation-delay:${Math.random()*12}s;
+      --d:${(Math.random()-.5)*80}px;
+      background:${Math.random()>.5?'#e2c06b':'#b8d8b8'}`;
+    c.appendChild(p);
+  }
+})();
+
+/* ══════════════════════════════════════
+   STARS on gate
+══════════════════════════════════════ */
+(function(){
+  const w=document.getElementById('starsWrap');
+  for(let i=0;i<55;i++){
+    const s=document.createElement('div'); s.className='star';
+    const sz=1+Math.random()*3;
+    s.style.cssText=`left:${Math.random()*100}vw;top:${Math.random()*100}vh;
+      width:${sz}px;height:${sz}px;
+      animation-duration:${1.5+Math.random()*3}s;animation-delay:${Math.random()*3}s`;
+    w.appendChild(s);
+  }
+})();
+
+/* ══════════════════════════════════════
+   SPARKLES around names
+══════════════════════════════════════ */
+(function(){
+  const w=document.getElementById('spkWrap');
+  for(let i=0;i<14;i++){
+    const s=document.createElement('div'); s.className='sp';
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;
+      animation-duration:${1.2+Math.random()*2.5}s;animation-delay:${Math.random()*2}s`;
+    w.appendChild(s);
+  }
+})();
+
+/* ══════════════════════════════════════
+   WEB AUDIO — Ambient Spiritual Tones
+   Works 100% in browser, no file needed
+══════════════════════════════════════ */
+let audioCtx=null, masterGain=null, musicOn=false, audioNodes=[];
+
+function buildAmbientMusic(){
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+  masterGain.connect(audioCtx.destination);
+
+  // Soft harmonic drone — peaceful Islamic aesthetic feel
+  const notes = [220, 275, 330, 440, 550]; // A3, near D, E, A4, C#5 — warm pentatonic
+  notes.forEach((freq, i) => {
+    const osc  = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    const filt = audioCtx.createBiquadFilter();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+    // gentle vibrato
+    const lfo = audioCtx.createOscillator();
+    const lfoGain = audioCtx.createGain();
+    lfo.frequency.setValueAtTime(0.3 + i*0.08, audioCtx.currentTime);
+    lfoGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    lfo.start();
+
+    filt.type = 'lowpass';
+    filt.frequency.setValueAtTime(800, audioCtx.currentTime);
+
+    gain.gain.setValueAtTime(0.06 / (i+1), audioCtx.currentTime);
+
+    osc.connect(filt);
+    filt.connect(gain);
+    gain.connect(masterGain);
+    osc.start();
+
+    audioNodes.push(osc, lfo);
+  });
+
+  // soft reverb-like delay
+  const delay = audioCtx.createDelay(3);
+  const delGain = audioCtx.createGain();
+  delay.delayTime.setValueAtTime(1.2, audioCtx.currentTime);
+  delGain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+  masterGain.connect(delay);
+  delay.connect(delGain);
+  delGain.connect(masterGain);
+}
+
+function startMusic(){
+  if(!audioCtx) buildAmbientMusic();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+  masterGain.gain.linearRampToValueAtTime(0.45, audioCtx.currentTime + 3);
+  musicOn = true;
+  updateMBtn();
+}
+
+function stopMusic(){
+  if(!audioCtx) return;
+  masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+  musicOn = false;
+  updateMBtn();
+}
+
+function toggleMusic(){
+  musicOn ? stopMusic() : startMusic();
+}
+
+function updateMBtn(){
+  document.getElementById('mBtn').textContent = musicOn ? '🔊' : '🎵';
+}
+
+/* ══════════════════════════════════════
+   OPEN DOORS
+══════════════════════════════════════ */
+let opened=false;
+function openDoors(){
+  if(opened) return;
+  opened=true;
+  const btn=document.getElementById('openBtn');
+  btn.disabled=true; btn.style.opacity='.55';
+
+  // swing doors
+  document.getElementById('dL').style.transform='perspective(1000px) rotateY(-116deg)';
+  document.getElementById('dR').style.transform='perspective(1000px) rotateY(116deg)';
+
+  // light burst
+  setTimeout(()=> document.getElementById('burst').classList.add('on'), 650);
+
+  // reveal invitation
+  setTimeout(()=>{
+    const gate=document.getElementById('gate');
+    gate.classList.add('gone');
+    document.getElementById('inv').classList.add('show');
+    document.getElementById('mBtn').classList.add('show');
+    startMusic();                       // ← music starts here
+    setTimeout(()=>gate.style.display='none', 1300);
+  }, 1450);
+}
+
+/* ══════════════════════════════════════
+   COUNTDOWN
+══════════════════════════════════════ */
+const wedding = new Date('2026-04-01T18:00:00');
+const cdD=document.getElementById('cdD'),cdH=document.getElementById('cdH'),
+      cdM=document.getElementById('cdM'),cdS=document.getElementById('cdS');
+function pad(n){return String(n).padStart(2,'0')}
+function setFlip(el,v){
+  if(el.textContent!==v){
+    el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip');
+    el.textContent=v;
+  }
+}
+function tick(){
+  const diff=wedding-new Date();
+  if(diff<=0){cdD.textContent=cdH.textContent=cdM.textContent=cdS.textContent='00';return}
+  setFlip(cdD, pad(Math.floor(diff/86400000)));
+  setFlip(cdH, pad(Math.floor((diff%86400000)/3600000)));
+  setFlip(cdM, pad(Math.floor((diff%3600000)/60000)));
+  setFlip(cdS, pad(Math.floor((diff%60000)/1000)));
+}
+tick(); setInterval(tick,1000);
+
+/* ══════════════════════════════════════
+   SEND WISHES → GOOGLE SHEETS
+══════════════════════════════════════ */
+async function sendWish(){
+  const name = document.getElementById('wName').value.trim();
+  const msg  = document.getElementById('wMsg').value.trim();
+  if(!name||!msg){ alert('Please fill in both your name and message 💐'); return; }
+
+  const btn = document.getElementById('subBtn');
+  btn.textContent='Sending…'; btn.disabled=true;
+
+  try{
+    await fetch(APPS_SCRIPT_URL,{
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name, message:msg,
+        timestamp: new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})
+      })
+    });
+    document.querySelector('.wform').style.display='none';
+    document.getElementById('wsuccess').style.display='block';
+  } catch(e){
+    btn.textContent='Send Wishes ✦'; btn.disabled=false;
+    alert('Something went wrong. Please try again.');
+  }
+}
+
+/* ══════════════════════════════════════
+   SCROLL FADE
+══════════════════════════════════════ */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+},{threshold:.12});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+
+/* Enter key to open doors */
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!opened) openDoors(); });
+</script>
+</body>
+</html>

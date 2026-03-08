@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Wishes Admin — Heena & Azaz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#fdf6ed;--gold:#c9a84c;--gold2:#e2c06b;--green:#5a7f5a;--dark:#2a2318;--soft:#8b7355;--card:rgba(255,255,255,.82)}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;opacity:.055;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='1'%3E%3Crect x='10' y='10' width='60' height='60' rx='2' transform='rotate(45 40 40)'/%3E%3Ccircle cx='40' cy='40' r='25'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:80px 80px}
+
+/* PARTICLES */
+#ptc{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.pt{position:absolute;border-radius:50%;opacity:0;animation:ptUp linear infinite}
+@keyframes ptUp{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.6}90%{opacity:.2}100%{transform:translateY(-10vh) translateX(var(--d)) scale(1.4);opacity:0}}
+
+/* ─── LOCK SCREEN ─── */
+#lock{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:linear-gradient(155deg,#f5e9d0 0%,#e8d5b0 50%,#d4bc8a 100%);transition:opacity .8s ease}
+#lock.out{opacity:0;pointer-events:none}
+
+.lbox{
+  background:rgba(255,255,255,.74);backdrop-filter:blur(18px);
+  border:1px solid rgba(201,168,76,.42);border-radius:24px;
+  padding:48px 36px;max-width:380px;width:100%;text-align:center;
+  box-shadow:0 20px 60px rgba(139,106,58,.16),0 4px 16px rgba(0,0,0,.06);
+  position:relative
+}
+.lbox::before,.lbox::after{content:'';position:absolute;width:44px;height:44px;border:2px solid rgba(201,168,76,.48)}
+.lbox::before{top:-1px;left:-1px;border-right:none;border-bottom:none;border-radius:4px 0 0 0}
+.lbox::after{bottom:-1px;right:-1px;border-left:none;border-top:none;border-radius:0 0 4px 0}
+
+.l-icon{font-size:44px;display:block;margin-bottom:16px;animation:glow 3s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(201,168,76,.5))}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 8px rgba(201,168,76,.3))}50%{filter:drop-shadow(0 0 20px rgba(201,168,76,.75))}}
+.l-arabic{font-family:'Amiri',serif;font-size:20px;color:var(--gold);margin-bottom:18px;opacity:.82}
+.l-title{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;color:var(--dark);margin-bottom:6px}
+.l-sub{font-size:13px;color:var(--soft);margin-bottom:28px;line-height:1.55}
+.l-input{
+  width:100%;background:rgba(253,246,237,.9);border:1.5px solid rgba(201,168,76,.4);
+  border-radius:12px;padding:14px 18px;font-family:'Poppins',sans-serif;
+  font-size:15px;color:var(--dark);text-align:center;letter-spacing:4px;
+  outline:none;margin-bottom:16px;transition:border-color .2s,box-shadow .2s
+}
+.l-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.14)}
+.l-btn{
+  width:100%;background:linear-gradient(135deg,#c9a84c,#e2c06b,#c9a84c);
+  border:none;padding:14px;border-radius:50px;
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:600;
+  color:#2a1a00;cursor:pointer;letter-spacing:2px;
+  box-shadow:0 4px 20px rgba(201,168,76,.42);transition:transform .2s,box-shadow .2s;
+  position:relative;overflow:hidden
+}
+.l-btn::before{content:'';position:absolute;top:-50%;left:-60%;width:50%;height:200%;background:rgba(255,255,255,.28);transform:skewX(-20deg);animation:shim 3s infinite}
+@keyframes shim{0%{left:-60%}100%{left:140%}}
+.l-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(201,168,76,.52)}
+.l-err{font-size:12px;color:#c0705a;margin-top:12px;min-height:18px}
+.l-err.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+/* ─── DASHBOARD ─── */
+#dash{display:none;position:relative;z-index:1}
+#dash.show{display:block;animation:fadeIn .8s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* Header */
+.hdr{
+  background:linear-gradient(135deg,rgba(201,168,76,.14),rgba(90,127,90,.07));
+  border-bottom:1px solid rgba(201,168,76,.22);
+  padding:26px 20px 22px;text-align:center;
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(14px)
+}
+.hdr-bismillah{font-family:'Amiri',serif;font-size:19px;color:var(--gold);margin-bottom:4px}
+.hdr-couple{font-family:'Playfair Display',serif;font-size:clamp(20px,5vw,28px);font-weight:700;
+  background:linear-gradient(135deg,#8b6a3a,var(--gold),#8b6a3a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--soft);margin-top:4px}
+.logout-btn{position:absolute;top:50%;right:16px;transform:translateY(-50%);
+  background:rgba(201,168,76,.14);border:1px solid rgba(201,168,76,.32);border-radius:20px;
+  padding:6px 14px;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--soft);cursor:pointer;transition:background .2s}
+.logout-btn:hover{background:rgba(201,168,76,.28)}
+
+/* Stats */
+.stats{max-width:580px;margin:22px auto 0;padding:0 20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.chip{background:var(--card);border:1px solid rgba(201,168,76,.28);border-radius:50px;padding:10px 22px;text-align:center;box-shadow:0 2px 12px rgba(201,168,76,.1)}
+.chip-n{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--gold);display:block;line-height:1}
+.chip-l{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-top:3px}
+
+/* Controls */
+.ctrl{max-width:580px;margin:18px auto 0;padding:0 20px;display:flex;gap:10px;flex-wrap:wrap}
+.sw{flex:1;min-width:170px;position:relative}
+.sw svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--soft);pointer-events:none}
+.srch{width:100%;background:var(--card);border:1px solid rgba(201,168,76,.28);border-radius:50px;
+  padding:10px 16px 10px 36px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--dark);
+  outline:none;transition:border-color .2s,box-shadow .2s}
+.srch:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12)}
+.rfsh{background:var(--green);border:none;border-radius:50px;padding:10px 20px;color:#fff;
+  font-size:12px;font-weight:600;letter-spacing:1px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+  box-shadow:0 3px 14px rgba(90,127,90,.3);transition:transform .2s,box-shadow .2s}
+.rfsh:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(90,127,90,.4)}
+.rfsh svg{width:14px;height:14px;transition:transform .5s}
+.rfsh.spin svg{animation:spin .6s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Wishes list */
+.wlist{max-width:580px;margin:18px auto 40px;padding:0 20px;display:flex;flex-direction:column;gap:14px}
+
+/* Wish card */
+.wcard{
+  background:var(--card);border:1px solid rgba(201,168,76,.2);border-radius:16px;
+  padding:22px 22px 18px;position:relative;backdrop-filter:blur(8px);
+  box-shadow:0 4px 20px rgba(139,106,58,.07);animation:cIn .5s ease both;overflow:hidden
+}
+@keyframes cIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.wcard::before{content:'❝';position:absolute;top:10px;right:14px;font-size:52px;
+  color:rgba(201,168,76,.1);font-family:'Playfair Display',serif;line-height:1;pointer-events:none}
+.wcard-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.avatar{width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold2),rgba(201,168,76,.4));
+  border:2px solid rgba(201,168,76,.38);display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#2a1a00;flex-shrink:0}
+.wname{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--dark)}
+.wtime{font-size:11px;color:var(--soft);margin-top:2px}
+.wmsg{font-size:14px;line-height:1.75;color:#4a3c28;font-style:italic;border-left:3px solid rgba(201,168,76,.38);padding-left:14px}
+.wnum{position:absolute;bottom:12px;right:16px;font-size:10px;font-weight:600;letter-spacing:1px;color:rgba(201,168,76,.45)}
+
+/* Shimmer loading */
+.shimmer{border-radius:16px;height:110px;margin-bottom:14px;
+  background:linear-gradient(90deg,rgba(201,168,76,.07) 25%,rgba(201,168,76,.15) 50%,rgba(201,168,76,.07) 75%);
+  background-size:200% 100%;animation:shimA 1.4s infinite}
+@keyframes shimA{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Empty / Error state */
+.empty{text-align:center;padding:50px 20px;color:var(--soft)}
+.empty .ico{font-size:50px;display:block;margin-bottom:14px}
+.empty p{font-family:'Playfair Display',serif;font-style:italic;font-size:16px}
+.empty small{font-size:12px;display:block;margin-top:8px;color:#bbb}
+
+.ftr{text-align:center;padding:20px;font-size:11px;color:rgba(139,115,85,.45);letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<div id="ptc"></div>
+
+<!-- ─── LOCK SCREEN ─── -->
+<div id="lock">
+  <div class="lbox">
+    <div class="l-arabic">بِسْمِ اللَّٰهِ</div>
+    <span class="l-icon">🔐</span>
+    <div class="l-title">Admin Access</div>
+    <div class="l-sub">Enter your password to view<br>all wedding wishes</div>
+    <input class="l-input" type="password" id="pwdIn" placeholder="• • • • • • • •"
+      onkeydown="if(event.key==='Enter')unlock()" autocomplete="off"/>
+    <button class="l-btn" onclick="unlock()">✦ Enter ✦</button>
+    <div class="l-err" id="lErr"></div>
+  </div>
+</div>
+
+<!-- ─── DASHBOARD ─── -->
+<div id="dash">
+  <div class="hdr">
+    <div class="hdr-bismillah">💌 Wedding Wishes</div>
+    <div class="hdr-couple">Heena &amp; Azaz</div>
+    <div class="hdr-sub">1 April 2026 · Zaveri Hall, Ahmedabad</div>
+    <button class="logout-btn" onclick="location.reload()">Logout</button>
+  </div>
+
+  <div class="stats">
+    <div class="chip"><span class="chip-n" id="totN">—</span><div class="chip-l">Total Wishes</div></div>
+    <div class="chip"><span class="chip-n" id="latN">—</span><div class="chip-l">Last Received</div></div>
+  </div>
+
+  <div class="ctrl">
+    <div class="sw">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="srch" type="text" id="srchIn" placeholder="Search by name or message…" oninput="filter()"/>
+    </div>
+    <button class="rfsh" id="rfshBtn" onclick="load()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+      Refresh
+    </button>
+  </div>
+
+  <div class="wlist" id="wList">
+    <div class="shimmer"></div><div class="shimmer"></div><div class="shimmer"></div>
+  </div>
+  <div class="ftr">✦ &nbsp; HEENA &amp; AZAZ · 2026 &nbsp; ✦</div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   CONFIG — 🔁 Replace with your Apps Script URL
+   🔁 Change the password to something only you know
+══════════════════════════════════════════════════ */
+const SCRIPT_URL    = 'YOUR_APPS_SCRIPT_URL_HERE';
+const ADMIN_PASS    = 'heenaazaz2026';   // change this!
+/* ════════════════════════════════════════════════ */
+
+let all = [];
+
+/* particles */
+(function(){
+  const c=document.getElementById('ptc');
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');p.className='pt';
+    const s=2+Math.random()*3;
+    p.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;
+      animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*14}s;
+      --d:${(Math.random()-.5)*60}px`;
+    c.appendChild(p);
+  }
+})();
+
+/* unlock */
+function unlock(){
+  const v=document.getElementById('pwdIn').value;
+  const e=document.getElementById('lErr');
+  if(v===ADMIN_PASS){
+    const l=document.getElementById('lock');
+    l.classList.add('out');
+    setTimeout(()=>l.style.display='none',900);
+    document.getElementById('dash').classList.add('show');
+    load();
+  } else {
+    e.textContent='✗ Incorrect password. Please try again.';
+    document.getElementById('pwdIn').value='';
+    document.getElementById('pwdIn').focus();
+    e.classList.remove('shake');
+    void e.offsetWidth;
+    e.classList.add('shake');
+  }
+}
+
+/* load wishes from Google Sheet via Apps Script */
+async function load(){
+  const btn=document.getElementById('rfshBtn');
+  btn.classList.add('spin');
+  const list=document.getElementById('wList');
+  list.innerHTML='<div class="shimmer"></div><div class="shimmer"></div><div class="shimmer"></div>';
+  try{
+    const res  = await fetch(SCRIPT_URL+'?action=get',{cache:'no-store'});
+    const json = await res.json();
+    all = (json.wishes||[]).reverse();
+    render(all);
+    stats(all);
+  } catch(e){
+    list.innerHTML=`<div class="empty">
+      <span class="ico">⚠️</span>
+      <p>Could not load wishes</p>
+      <small>Check your Apps Script URL in the config section</small>
+    </div>`;
+  } finally {
+    btn.classList.remove('spin');
+  }
+}
+
+/* render cards */
+function render(list){
+  const el=document.getElementById('wList');
+  if(!list.length){
+    el.innerHTML=`<div class="empty"><span class="ico">🌸</span><p>No wishes yet</p><small>Share the invitation and they will arrive!</small></div>`;
+    return;
+  }
+  el.innerHTML=list.map((w,i)=>`
+    <div class="wcard" style="animation-delay:${i*.06}s">
+      <div class="wcard-top">
+        <div class="avatar">${(w.name||'?')[0].toUpperCase()}</div>
+        <div>
+          <div class="wname">${esc(w.name)}</div>
+          <div class="wtime">${esc(w.timestamp||'')}</div>
+        </div>
+      </div>
+      <div class="wmsg">${esc(w.message)}</div>
+      <div class="wnum">#${list.length-i}</div>
+    </div>`).join('');
+}
+
+/* search */
+function filter(){
+  const q=document.getElementById('srchIn').value.toLowerCase();
+  render(q ? all.filter(w=>(w.name||'').toLowerCase().includes(q)||(w.message||'').toLowerCase().includes(q)) : all);
+}
+
+/* stats */
+function stats(w){
+  document.getElementById('totN').textContent=w.length;
+  if(w.length){
+    const t=w[0].timestamp||'';
+    const parts=t.split(',');
+    document.getElementById('latN').textContent=parts[1]?parts[1].trim().substring(0,5):'—';
+  } else {
+    document.getElementById('latN').textContent='—';
+  }
+}
+
+/* escape html */
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+</script>
+</body>
+</html>
