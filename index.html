@@ -319,19 +319,15 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
       <div class="gdiv"></div>
       <div class="ev-date">Wednesday, 1st April 2026</div>
       <div class="ev-day">🌅 10:00 AM</div>
-    </div>
-  </div>
-
-  <!-- NIKAAH VENUE -->
-  <div class="sec fi" style="padding-top:0">
-    <div class="vcard">
-      <div class="vlbl">📍 Venue</div>
-      <div class="vname">Sana Appartment</div>
-      <div class="vaddr">502, Kanch Ki Masjid, Jamalpur, Ahmedabad</div>
-      <a class="dir-btn" href="https://share.google/jAu7wiOwOHThkWDTk" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-        Get Directions
-      </a>
+      <div style="margin-top:16px;font-size:13px;color:var(--soft);display:flex;align-items:center;gap:6px;justify-content:center">
+        <span>🏠</span> Home · Sana Appartment 4, Jamalpur
+      </div>
+      <div style="margin-top:14px">
+        <a class="dir-btn" href="https://share.google/jAu7wiOwOHThkWDTk" target="_blank" rel="noopener" style="justify-content:center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Get Directions
+        </a>
+      </div>
     </div>
   </div>
 
@@ -343,19 +339,15 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
       <div class="gdiv"></div>
       <div class="ev-date">Wednesday, 1st April 2026</div>
       <div class="ev-day">🌙 7:00 PM</div>
-    </div>
-  </div>
-
-  <!-- RECEPTION VENUE -->
-  <div class="sec fi" style="padding-top:0">
-    <div class="vcard">
-      <div class="vlbl">📍 Venue</div>
-      <div class="vname">Zaveri Hall</div>
-      <div class="vaddr">Paldi, Ahmedabad</div>
-      <a class="dir-btn" href="https://share.google/riVQd6QQuD4Lhy7rY" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-        Get Directions
-      </a>
+      <div style="margin-top:16px;font-size:13px;color:var(--soft);display:flex;align-items:center;gap:6px;justify-content:center">
+        <span>🏛️</span> Zaveri Hall, Paldi, Ahmedabad
+      </div>
+      <div style="margin-top:14px">
+        <a class="dir-btn" href="https://share.google/riVQd6QQuD4Lhy7rY" target="_blank" rel="noopener" style="justify-content:center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Get Directions
+        </a>
+      </div>
     </div>
   </div>
 
@@ -467,83 +459,126 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxc-VKmEFuKQfQH
   }
 })();
 
-/* ══════════════════════════════════════
-   WEB AUDIO — Ambient Spiritual Tones
-   Works 100% in browser, no file needed
-══════════════════════════════════════ */
-let audioCtx=null, masterGain=null, musicOn=false, audioNodes=[];
+/* ══════════════════════════════════════════
+   WEB AUDIO — Soothing Islamic Ambient Music
+   Maqam Rast-inspired drone with oud warmth
+══════════════════════════════════════════ */
+let audioCtx=null, masterGain=null, musicOn=false;
 
 function buildAmbientMusic(){
   audioCtx = new (window.AudioContext||window.webkitAudioContext)();
   masterGain = audioCtx.createGain();
   masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+
+  // Reverb convolver for mosque-like space
+  const convolver = audioCtx.createConvolver();
+  const reverbLen = audioCtx.sampleRate * 3.5;
+  const reverbBuf = audioCtx.createBuffer(2, reverbLen, audioCtx.sampleRate);
+  for(let c=0;c<2;c++){
+    const d = reverbBuf.getChannelData(c);
+    for(let i=0;i<reverbLen;i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/reverbLen, 2.2);
+  }
+  convolver.buffer = reverbBuf;
+
+  const reverbGain = audioCtx.createGain();
+  reverbGain.gain.setValueAtTime(0.38, audioCtx.currentTime);
+  convolver.connect(reverbGain);
+  reverbGain.connect(masterGain);
+
+  const dryGain = audioCtx.createGain();
+  dryGain.gain.setValueAtTime(0.62, audioCtx.currentTime);
+  dryGain.connect(masterGain);
   masterGain.connect(audioCtx.destination);
 
-  // Soft harmonic drone — peaceful Islamic aesthetic feel
-  const notes = [220, 275, 330, 440, 550]; // A3, near D, E, A4, C#5 — warm pentatonic
-  notes.forEach((freq, i) => {
-    const osc  = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const filt = audioCtx.createBiquadFilter();
+  // Maqam Rast scale on C: C D E-half-flat F G A Bb
+  // Using Hz: 261.6, 293.7, 311.1, 349.2, 392, 440, 466.2
+  // Drone layer — root + fifth (C3 + G3) with slow swell
+  const drones = [
+    {freq:130.8, vol:0.055, type:'sine'},   // C2 deep root
+    {freq:196.0, vol:0.040, type:'sine'},   // G2 fifth
+    {freq:261.6, vol:0.048, type:'triangle'}, // C3
+    {freq:392.0, vol:0.028, type:'sine'},   // G3
+  ];
 
-    osc.type = 'sine';
+  drones.forEach(({freq, vol, type}) => {
+    const osc = audioCtx.createOscillator();
+    const g   = audioCtx.createGain();
+    const lp  = audioCtx.createBiquadFilter();
+
+    osc.type = type;
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
-    // gentle vibrato
+    // micro-detune for warmth
+    osc.detune.setValueAtTime((Math.random()-0.5)*8, audioCtx.currentTime);
+
+    // slow swell LFO
     const lfo = audioCtx.createOscillator();
-    const lfoGain = audioCtx.createGain();
-    lfo.frequency.setValueAtTime(0.3 + i*0.08, audioCtx.currentTime);
-    lfoGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
-    lfo.connect(lfoGain);
-    lfoGain.connect(osc.frequency);
+    const lfoG = audioCtx.createGain();
+    lfo.frequency.setValueAtTime(0.12 + Math.random()*0.06, audioCtx.currentTime);
+    lfoG.gain.setValueAtTime(vol*0.3, audioCtx.currentTime);
+    lfo.connect(lfoG); lfoG.connect(g.gain);
     lfo.start();
 
-    filt.type = 'lowpass';
-    filt.frequency.setValueAtTime(800, audioCtx.currentTime);
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(600, audioCtx.currentTime);
+    lp.Q.setValueAtTime(1.2, audioCtx.currentTime);
 
-    gain.gain.setValueAtTime(0.06 / (i+1), audioCtx.currentTime);
-
-    osc.connect(filt);
-    filt.connect(gain);
-    gain.connect(masterGain);
+    g.gain.setValueAtTime(vol, audioCtx.currentTime);
+    osc.connect(lp); lp.connect(g);
+    g.connect(dryGain); g.connect(convolver);
     osc.start();
-
-    audioNodes.push(osc, lfo);
   });
 
-  // soft reverb-like delay
-  const delay = audioCtx.createDelay(3);
-  const delGain = audioCtx.createGain();
-  delay.delayTime.setValueAtTime(1.2, audioCtx.currentTime);
-  delGain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-  masterGain.connect(delay);
-  delay.connect(delGain);
-  delGain.connect(masterGain);
+  // Melodic oud-like pluck — plays a gentle repeating phrase
+  const melody = [261.6, 293.7, 311.1, 349.2, 311.1, 293.7, 261.6, 246.9];
+  let step = 0;
+  function pluck(){
+    if(!musicOn) return;
+    const t = audioCtx.currentTime;
+    const freq = melody[step % melody.length];
+    step++;
+
+    // oud tone = triangle + fast decay
+    const osc  = audioCtx.createOscillator();
+    const env  = audioCtx.createGain();
+    const lp   = audioCtx.createBiquadFilter();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, t);
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(1800, t);
+
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(0.09, t + 0.012);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 1.6);
+
+    osc.connect(lp); lp.connect(env);
+    env.connect(dryGain); env.connect(convolver);
+    osc.start(t); osc.stop(t + 2);
+
+    // next note after 1.8–2.8s gap for meditative feel
+    setTimeout(pluck, 1800 + Math.random()*1000);
+  }
+  // start first pluck after a 2s settle
+  setTimeout(()=>{ if(musicOn) pluck(); }, 2000);
 }
 
 function startMusic(){
   if(!audioCtx) buildAmbientMusic();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
+  if(audioCtx.state==='suspended') audioCtx.resume();
   masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-  masterGain.gain.linearRampToValueAtTime(0.45, audioCtx.currentTime + 3);
-  musicOn = true;
-  updateMBtn();
+  masterGain.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 4);
+  musicOn=true; updateMBtn();
 }
 
 function stopMusic(){
   if(!audioCtx) return;
-  masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
-  musicOn = false;
-  updateMBtn();
+  masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2);
+  musicOn=false; updateMBtn();
 }
 
-function toggleMusic(){
-  musicOn ? stopMusic() : startMusic();
-}
-
-function updateMBtn(){
-  document.getElementById('mBtn').textContent = musicOn ? '🔊' : '🎵';
-}
+function toggleMusic(){ musicOn ? stopMusic() : startMusic(); }
+function updateMBtn(){ document.getElementById('mBtn').textContent = musicOn ? '🔊' : '🎵'; }
 
 /* ══════════════════════════════════════
    OPEN DOORS
