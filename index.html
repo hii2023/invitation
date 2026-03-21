@@ -342,9 +342,9 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
 
     <div class="names">
       <div class="sparkles" id="spkWrap"></div>
-      <div class="bride">Heena Sejavtawala</div>
+      <div class="bride" id="brideName">Heena Sejavtawala</div>
       <span class="heart">♥</span>
-      <div class="groom">Azaz Vepari</div>
+      <div class="groom" id="groomName">Azaz Vepari</div>
     </div>
 
     <div class="invite-lbl" style="margin-top:14px;margin-bottom:0">joyfully invite you to their</div>
@@ -450,8 +450,8 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
   <!-- FOOTER -->
   <div class="footer fi">
     <span class="moon">🌙</span>
-    <div class="f-arabic">جَزَاكَ ٱللَّٰهُ خَيْرًا</div>
-    <div class="f-text">May Allah bless this union with love, peace &amp; happiness</div>
+    <div class="f-arabic" id="footerBlessing">جَزَاكَ ٱللَّٰهُ خَيْرًا</div>
+    <div class="f-text" id="footerTagline">May Allah bless this union with love, peace &amp; happiness</div>
     <div class="ornament" style="margin-top:20px">✦ &nbsp; Heena &amp; Azaz &nbsp; ✦</div>
     <div style="font-size:11px;color:var(--soft);margin-top:10px;letter-spacing:2px">1 APRIL 2026 · AHMEDABAD</div>
   </div>
@@ -733,9 +733,9 @@ document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!opened) openDoors(
 })();
 
 var LANGS = {
-  en: { couple: 'Heena ♥ Azaz', sub: 'Nikaah & Wedding Reception', blessing: 'بَارَكَ اللَّهُ لَكُمَا', tag: 'May Allah bless this union' },
-  gu: { couple: 'હીના સેજાવતાવાલા ♥ એઝાઝ વેપારી', sub: 'નિકાહ અને રિસેપ્શન', blessing: 'અલ્લાહ તમને બંનેને આશીર્વાદ આપે', tag: 'આ પ્રસંગ ખૂબ ખૂબ મુબારક' },
-  ur: { couple: 'حنا ❤ عزاز', sub: 'نکاح اور ولیمہ', blessing: 'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا', tag: 'اللہ اس رشتے کو برکت دے' }
+  en: { bride: 'Heena Sejavtawala', groom: 'Azaz Vepari', blessing: 'بَارَكَ اللَّهُ لَكُمَا', tag: 'May Allah bless this union with love, peace & happiness' },
+  gu: { bride: 'હીના સેજાવતાવાલા', groom: 'એઝાઝ વેપારી', blessing: 'અલ્લાહ તમને બંનેને આશીર્વાદ આપે', tag: 'આ પ્રસંગ ખૂબ ખૂબ મુબારક' },
+  ur: { bride: 'حنا سجاوتاوالا', groom: 'عزاز ویپاری', blessing: 'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا', tag: 'اللہ اس رشتے کو برکت دے' }
 };
 
 function setLang(lang, btn){
@@ -744,8 +744,8 @@ function setLang(lang, btn){
   var L = LANGS[lang];
   var dir = lang === 'ur' ? 'rtl' : 'ltr';
   var el = function(id){ return document.getElementById(id); };
-  if(el('hdrCouple')) el('hdrCouple').textContent = L.couple;
-  if(el('hdrSub')) el('hdrSub').textContent = L.sub;
+  if(el('brideName')) el('brideName').textContent = L.bride;
+  if(el('groomName')) el('groomName').textContent = L.groom;
   if(el('footerBlessing')){ el('footerBlessing').textContent = L.blessing; el('footerBlessing').style.direction = dir; }
   if(el('footerTagline')) el('footerTagline').textContent = L.tag;
   document.body.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
