@@ -277,7 +277,11 @@ tr:hover{background:rgba(201,168,76,.05)}
         </div>
         <div class="fg">
           <label>WhatsApp Number</label>
-          <input type="tel" id="whatsappIn" placeholder="+91..."/>
+          <input type="tel" id="whatsappIn" placeholder="10-digit or +91..."/>
+        </div>
+        <div class="fg full">
+          <label>Invitees (optional — comma separated)</label>
+          <input type="text" id="inviteesIn" placeholder="e.g. Mohammad, Fatima, Ahmed"/>
         </div>
         <div class="fg">
           <label>Invitation Type</label>
@@ -303,6 +307,7 @@ tr:hover{background:rgba(201,168,76,.05)}
             <th>#</th>
             <th>Name</th>
             <th>WhatsApp</th>
+            <th>Invitees</th>
             <th>Type</th>
             <th>Status</th>
             <th>Actions</th>
@@ -397,6 +402,7 @@ function addGuest(){
   const name = document.getElementById('guestNameIn').value.trim();
   const whatsapp = document.getElementById('whatsappIn').value.trim();
   const type = document.getElementById('invTypeIn').value;
+  const invitees = document.getElementById('inviteesIn').value.trim();
 
   if(!name || !whatsapp || !type){
     alert('Please fill in all fields');
@@ -406,6 +412,7 @@ function addGuest(){
   const guest = {
     id: Date.now(),
     name, whatsapp, type,
+    invitees: invitees || '',
     status: 'Pending',
     dateAdded: new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'})
   };
@@ -416,6 +423,7 @@ function addGuest(){
   document.getElementById('guestNameIn').value = '';
   document.getElementById('whatsappIn').value = '';
   document.getElementById('invTypeIn').value = '';
+  document.getElementById('inviteesIn').value = '';
 
   renderTable();
   updateStats();
@@ -431,7 +439,7 @@ function deleteGuest(id){
 function renderTable(){
   const tbody = document.getElementById('guestTbody');
   if(!guestList.length){
-    tbody.innerHTML = '<tr><td colspan="6" class="empty"><span class="ico">📋</span><p>No guests added yet</p></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="empty"><span class="ico">📋</span><p>No guests added yet</p></td></tr>';
     return;
   }
 
@@ -440,6 +448,7 @@ function renderTable(){
       <td>${i + 1}</td>
       <td>${esc(g.name)}</td>
       <td>${esc(g.whatsapp)}</td>
+      <td>${esc(g.invitees||'')}</td>
       <td>${esc(g.type)}</td>
       <td><span class="status-badge status-${g.status === 'Shared' ? 'shared' : 'pending'}">${g.status}</span></td>
       <td>
@@ -479,11 +488,19 @@ function sendViaWhatsApp(guestId){
 
   const page = pageMap[guest.type];
   const encodedName = encodeURIComponent(guest.name);
-  const inviteUrl = BASE_URL + page + '?guest=' + encodedName;
+  const encodedInvitees = guest.invitees ? '&invitees=' + encodeURIComponent(guest.invitees) : '';
+  const inviteUrl = BASE_URL + page + '?guest=' + encodedName + encodedInvitees;
 
   const message = `As-salamu alaykum ${guest.name}! 🌹\n\nYou are cordially invited to the wedding celebrations of *Heena & Azaz*.\n\n✨ ${inviteUrl}\n\nWe look forward to celebrating with you! 🌸\n\nWith love,\nHeena & Azaz`;
 
-  const waUrl = `https://wa.me/${guest.whatsapp.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
+  function normalizeWA(raw){
+    const d=raw.replace(/[^\d]/g,'');
+    if(d.length===10)return'91'+d;
+    if(d.length===12&&d.startsWith('91'))return d;
+    if(d.length===11&&d.startsWith('0'))return'91'+d.slice(1);
+    return d;
+  }
+  const waUrl = `https://wa.me/${normalizeWA(guest.whatsapp)}?text=${encodeURIComponent(message)}`;
 
   pendingConfirm = guestId;
   window.open(waUrl, '_blank');
@@ -592,7 +609,8 @@ function copyGuestLink(guestId){
 
   const page = pageMap[guest.type];
   const encodedName = encodeURIComponent(guest.name);
-  const inviteUrl = BASE_URL + page + '?guest=' + encodedName;
+  const encodedInvitees = guest.invitees ? '&invitees=' + encodeURIComponent(guest.invitees) : '';
+  const inviteUrl = BASE_URL + page + '?guest=' + encodedName + encodedInvitees;
 
   navigator.clipboard.writeText(inviteUrl).then(function(){
     alert('Guest link copied to clipboard!');

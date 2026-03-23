@@ -160,10 +160,11 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
 .fi.vis{opacity:1;transform:none}
 
 /* ════ GUEST BANNER ════ */
-#guestBanner{display:none;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.08));border-bottom:2px solid rgba(201,168,76,.3);padding:28px 20px;text-align:center;animation:fadeIn .6s ease}
-#guestBanner .guest-welcome{font-family:'Amiri',serif;font-size:16px;color:var(--gold);margin-bottom:12px;letter-spacing:1px}
-#guestBanner .guest-name{font-family:'Playfair Display',serif;font-size:clamp(24px,6vw,36px);font-weight:700;background:linear-gradient(135deg,#8b6a3a,var(--gold),#8b6a3a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;line-height:1.2}
-#guestBanner .guest-sub{font-size:14px;color:var(--soft);font-style:italic;letter-spacing:.5px}
+#guestBanner{display:none;text-align:center;padding:28px 20px 0;max-width:560px;margin:0 auto}
+.gb-welcome{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--soft);margin-bottom:8px}
+.gb-name{font-family:'Playfair Display',serif;font-size:clamp(26px,7vw,38px);font-weight:700;color:var(--gold);margin-bottom:6px}
+.gb-sub{font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--soft)}
+.gb-div{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:14px auto 0}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
 
 /* ════ LANG SWITCHER (compact, top-right) ════ */
@@ -171,6 +172,13 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
 #langBar.show{display:flex}
 .lb{border:none;background:none;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--soft);cursor:pointer;padding:3px 6px;border-radius:20px;transition:all .2s;font-family:'Poppins',sans-serif}
 .lb.on{background:var(--gold);color:#2a1a00}
+.gb-invitees{display:none;margin-top:10px;font-size:12px;color:var(--soft);letter-spacing:.5px}
+.inv-name{font-family:'Playfair Display',serif;color:var(--dark);font-weight:600;font-size:13px}
+.inv-sep{color:var(--gold);margin:0 7px;opacity:.7}
+.hdr-sn{font-size:.44em;font-weight:400;letter-spacing:1.5px;opacity:.72;display:inline}
+#mBtn{position:fixed;bottom:22px;right:22px;z-index:300;background:rgba(201,168,76,.92);border:none;width:48px;height:48px;border-radius:50%;font-size:20px;cursor:pointer;box-shadow:0 4px 18px rgba(201,168,76,.55);display:none;align-items:center;justify-content:center;transition:transform .2s}
+#mBtn.show{display:flex}
+#mBtn:hover{transform:scale(1.1)}
 </style>
 </head>
 <body>
@@ -196,14 +204,19 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
   </div>
 </div>
 
+<!-- MUSIC BUTTON -->
+<button id="mBtn" onclick="toggleMusic()" title="Toggle music">🎵</button>
+
 <!-- ════ MAIN CONTENT ════ -->
 <div id="main">
 
   <!-- Guest Banner — shows only if URL has ?guest=Name -->
   <div id="guestBanner">
-    <div class="guest-welcome">بِسْمِ اللَّٰهِ — Welcome</div>
-    <div class="guest-name" id="guestName"></div>
-    <div class="guest-sub">We are delighted to have you join our celebration</div>
+    <div class="gb-welcome">✦ Special Invitation for ✦</div>
+    <div class="gb-name" id="guestNameDisplay"></div>
+    <div class="gb-invitees" id="inviteesDisplay"></div>
+    <div class="gb-sub">We are honoured by your presence</div>
+    <div class="gb-div"></div>
   </div>
 
   <div class="geo"></div>
@@ -213,7 +226,7 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
     <div class="hdr-sp" id="spkWrap"></div>
     <div class="hdr-top">✦ Daawat E Khaas ✦</div>
     <div class="hdr-bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-    <div class="hdr-couple" id="hdrCouple">Heena <span class="heart">♥</span> Azaz</div>
+    <div class="hdr-couple" id="hdrCouple">Heena <span class="hdr-sn">Sejavtawala</span> <span class="heart">♥</span> Azaz <span class="hdr-sn">Vepari</span></div>
     <div class="hdr-note">You are our special guest — we await you with open hearts 🌼</div>
     <div class="minarets">
       <svg viewBox="0 0 30 70"><rect x="12" y="50" width="6" height="20" fill="#c9a84c"/><rect x="8" y="35" width="14" height="16" rx="2" fill="#c9a84c"/><ellipse cx="15" cy="34" rx="8" ry="6" fill="#c9a84c"/><rect x="13" y="10" width="4" height="25" fill="#c9a84c"/><ellipse cx="15" cy="10" rx="4" ry="3" fill="#c9a84c"/></svg>
@@ -464,6 +477,7 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
     <div class="f-text" id="footerTagline">May Allah bless this union with love, joy &amp; colour</div>
     <div class="ornament" style="margin-top:16px">✦ &nbsp; Heena &amp; Azaz &nbsp; ✦</div>
     <div style="font-size:11px;color:var(--soft);margin-top:10px;letter-spacing:2px">27 MARCH – 1 APRIL 2026 · AHMEDABAD</div>
+    <div style="font-size:10px;color:rgba(139,115,85,.4);margin-top:14px;letter-spacing:1px">Powered by <a href="https://axiotrix.com" target="_blank" rel="noopener" style="color:rgba(139,115,85,.55);text-decoration:none">Axiotrix.com</a></div>
   </div>
 
 </div><!-- end #main -->
@@ -498,7 +512,9 @@ function openDoors(){
   setTimeout(()=>{
     const g=document.getElementById('gate');g.classList.add('gone');
     document.getElementById('main').classList.add('show');
-    document.getElementById('langBar').classList.add('show'); // show language switcher
+    document.getElementById('langBar').classList.add('show');
+    document.getElementById('mBtn').classList.add('show');
+    startMusic();
     setTimeout(()=>g.style.display='none',1300);
   },1450);
 }
@@ -549,32 +565,128 @@ document.querySelectorAll('.fi,.ev').forEach(el=>obs.observe(el));
   tick();setInterval(tick,1000);
 })();
 
-/* ── Guest Name from URL (?guest=Name) ── */
 (function(){
-  const g=new URLSearchParams(window.location.search).get('guest');
+  const p=new URLSearchParams(window.location.search);
+  const g=p.get('guest');
+  const inv=p.get('invitees');
   if(g){
-    document.getElementById('guestName').textContent=decodeURIComponent(g);
-    document.getElementById('guestBanner').style.display='block';
+    const nameEl=document.getElementById('guestNameDisplay')||document.getElementById('guestName');
+    if(nameEl) nameEl.textContent=decodeURIComponent(g);
+    if(inv){
+      const names=decodeURIComponent(inv).split(',').map(s=>s.trim()).filter(Boolean);
+      if(names.length){
+        const el=document.getElementById('inviteesDisplay');
+        if(el){
+          el.innerHTML=names.map(n=>`<span class="inv-name">${n}</span>`).join('<span class="inv-sep">•</span>');
+          el.style.display='block';
+        }
+      }
+    }
+    const banner=document.getElementById('guestBanner');
+    if(banner)banner.style.display='block';
   }
 })();
 
 /* ── Language Switcher ── */
 var LANGS={
-  en:{couple:'Heena ♥ Azaz',sub:'28 & 29 March 2026',blessing:'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',tag:'May Allah bless this union with love, joy & colour'},
-  gu:{couple:'હીના સેજાવતાવાલા ♥ એઝાઝ વેપારી',sub:'28 & 29 માર્ચ 2026',blessing:'અલ્લાહ તમને બંનેને આશીર્વાદ આપે',tag:'આ પ્રસંગ ખૂબ ખૂબ મુબારક'},
-  ur:{couple:'حنا ❤ عزاز',sub:'28 اور 29 مارچ 2026',blessing:'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',tag:'اللہ اس رشتے کو برکت دے'}
+  en:{couple:'Heena <span class="hdr-sn">Sejavtawala</span> <span class="heart">♥</span> Azaz <span class="hdr-sn">Vepari</span>',sub:'28 & 29 March 2026',blessing:'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',tag:'May Allah bless this union with love, joy & colour'},
+  gu:{couple:'હીના <span class="hdr-sn">સેજાવતાવાલા</span> <span class="heart">♥</span> એઝાઝ <span class="hdr-sn">વેપારી</span>',sub:'28 & 29 માર્ચ 2026',blessing:'અલ્લાહ તમને બંનેને આશીર્વાદ આપે',tag:'આ પ્રસંગ ખૂબ ખૂબ મુબારક'},
+  ur:{couple:'حنا <span class="hdr-sn">سجاوتاوالا</span> <span class="heart">❤</span> عزاز <span class="hdr-sn">ویپاری</span>',sub:'28 اور 29 مارچ 2026',blessing:'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',tag:'اللہ اس رشتے کو برکت دے'}
 };
 function setLang(lang,btn){
   document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('on');});
   btn.classList.add('on');
   var L=LANGS[lang];
   var el=function(id){return document.getElementById(id);};
-  if(el('hdrCouple'))el('hdrCouple').textContent=L.couple;
+  if(el('hdrCouple'))el('hdrCouple').innerHTML=L.couple;
   if(el('hdrSub'))el('hdrSub').textContent=L.sub;
   if(el('footerBlessing')){el('footerBlessing').textContent=L.blessing;el('footerBlessing').style.direction=lang==='ur'?'rtl':'ltr';}
   if(el('footerTagline'))el('footerTagline').textContent=L.tag;
   document.body.style.direction=lang==='ur'?'rtl':'ltr';
 }
+
+/* ═══ TURKISH NEY MUSIC — Maqam Hijaz ═══ */
+let audioCtx=null,masterGain=null,musicOn=false;
+function buildMusic(){
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  masterGain=audioCtx.createGain();
+  masterGain.gain.setValueAtTime(0,audioCtx.currentTime);
+  masterGain.connect(audioCtx.destination);
+  const rL=audioCtx.sampleRate*4.5,rB=audioCtx.createBuffer(2,rL,audioCtx.sampleRate);
+  for(let c=0;c<2;c++){const d=rB.getChannelData(c);for(let i=0;i<rL;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/rL,1.6);}
+  const conv=audioCtx.createConvolver();conv.buffer=rB;
+  const revG=audioCtx.createGain();revG.gain.setValueAtTime(0.62,audioCtx.currentTime);conv.connect(revG);revG.connect(masterGain);
+  const dryG=audioCtx.createGain();dryG.gain.setValueAtTime(0.38,audioCtx.currentTime);dryG.connect(masterGain);
+  [{freq:146.8,vol:.042},{freq:220.0,vol:.030},{freq:293.7,vol:.036},{freq:440.0,vol:.018}].forEach(({freq,vol})=>{
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain(),lp=audioCtx.createBiquadFilter();
+    lp.type='lowpass';lp.frequency.setValueAtTime(450,audioCtx.currentTime);
+    o.type='sine';o.frequency.setValueAtTime(freq,audioCtx.currentTime);
+    o.detune.setValueAtTime((Math.random()-.5)*10,audioCtx.currentTime);
+    const lfo=audioCtx.createOscillator(),lfoG=audioCtx.createGain();
+    lfo.frequency.setValueAtTime(.09+Math.random()*.04,audioCtx.currentTime);
+    lfoG.gain.setValueAtTime(vol*.22,audioCtx.currentTime);
+    lfo.connect(lfoG);lfoG.connect(g.gain);lfo.start();
+    g.gain.setValueAtTime(vol,audioCtx.currentTime);
+    o.connect(lp);lp.connect(g);g.connect(dryG);g.connect(conv);o.start();
+  });
+  const hijaz=[146.8,155.6,185.0,196.0,220.0,233.1,261.6,293.7,311.1,370.0,392.0,440.0,466.2,523.3,587.3];
+  const phrases=[[7,8,9,10,9,8,7,6,7],[7,9,10,11,10,9,8,7],[10,11,12,11,10,9,8],[7,8,9,8,7,6,5,6,7],[9,10,11,10,9,8,7,8],[7,8,9,10,11,10,9,8,7]];
+  let pi=0;
+  function playNote(freq,dur){
+    if(!musicOn||!audioCtx)return;
+    const t=audioCtx.currentTime;
+    const saw=audioCtx.createOscillator();saw.type='sawtooth';saw.frequency.setValueAtTime(freq,t);
+    const sn=audioCtx.createOscillator();sn.type='sine';sn.frequency.setValueAtTime(freq,t);
+    const vib=audioCtx.createOscillator();const vibG=audioCtx.createGain();
+    vib.frequency.setValueAtTime(5.5,t);vibG.gain.setValueAtTime(0,t);
+    vibG.gain.linearRampToValueAtTime(freq*.0075,t+.2);
+    vib.connect(vibG);vibG.connect(saw.frequency);vibG.connect(sn.frequency);
+    vib.start(t);vib.stop(t+dur);
+    const nbuf=audioCtx.createBuffer(1,Math.floor(audioCtx.sampleRate*.07),audioCtx.sampleRate);
+    const nd2=nbuf.getChannelData(0);for(let i=0;i<nd2.length;i++)nd2[i]=Math.random()*2-1;
+    const ns=audioCtx.createBufferSource();ns.buffer=nbuf;
+    const ng=audioCtx.createGain();ng.gain.setValueAtTime(.028,t);ns.connect(ng);
+    const bp=audioCtx.createBiquadFilter();bp.type='bandpass';bp.frequency.setValueAtTime(freq*1.4,t);bp.Q.setValueAtTime(2.2,t);
+    const lp2=audioCtx.createBiquadFilter();lp2.type='lowpass';lp2.frequency.setValueAtTime(freq*3.5,t);
+    const sawG=audioCtx.createGain();sawG.gain.setValueAtTime(.26,t);
+    const snG=audioCtx.createGain();snG.gain.setValueAtTime(.66,t);
+    saw.connect(sawG);sawG.connect(bp);sn.connect(snG);snG.connect(bp);ng.connect(bp);
+    bp.connect(lp2);
+    const env=audioCtx.createGain();env.gain.setValueAtTime(0,t);
+    env.gain.linearRampToValueAtTime(.13,t+.1);
+    env.gain.setValueAtTime(.13,t+dur-.18);
+    env.gain.linearRampToValueAtTime(0,t+dur);
+    lp2.connect(env);env.connect(dryG);env.connect(conv);
+    saw.start(t);saw.stop(t+dur);sn.start(t);sn.stop(t+dur);ns.start(t);ns.stop(t+.07);
+  }
+  function schedPhrase(){
+    if(!musicOn)return;
+    const ph=phrases[pi++%phrases.length];
+    const nd=.92+Math.random()*.32;
+    let d=0;
+    ph.forEach(idx=>{
+      const freq=hijaz[Math.max(0,Math.min(hijaz.length-1,idx))];
+      setTimeout(()=>{if(musicOn)playNote(freq,nd);},d*1000);
+      d+=nd*.74;
+    });
+    setTimeout(schedPhrase,(d+1.9+Math.random()*1.6)*1000);
+  }
+  setTimeout(()=>{if(musicOn)schedPhrase();},2400);
+}
+function startMusic(){
+  if(!audioCtx)buildMusic();
+  if(audioCtx.state==='suspended')audioCtx.resume();
+  masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+  masterGain.gain.linearRampToValueAtTime(.52,audioCtx.currentTime+3);
+  musicOn=true;updateMBtn();
+}
+function stopMusic(){
+  if(!audioCtx)return;
+  masterGain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+2);
+  musicOn=false;updateMBtn();
+}
+function toggleMusic(){musicOn?stopMusic():startMusic();}
+function updateMBtn(){const b=document.getElementById('mBtn');if(b)b.textContent=musicOn?'🔊':'🎵';}
 </script>
 </body>
 </html>
