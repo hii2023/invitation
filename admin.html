@@ -245,17 +245,22 @@ tr:hover{background:rgba(201,168,76,.05)}
       <div class="share-card">
         <div class="share-title">Daawat</div>
         <div class="share-desc">Nikaah & Reception</div>
-        <button class="copy-btn" onclick="copyLink('https://hii2023.github.io/invitation/index.html')">📋 Copy Link</button>
+        <button class="copy-btn" onclick="copyLink('https://heenaazaz.in/index.html')">📋 Copy Link</button>
       </div>
       <div class="share-card">
         <div class="share-title">Invitation</div>
         <div class="share-desc">Complete Wedding Celebrations</div>
-        <button class="copy-btn" onclick="copyLink('https://hii2023.github.io/invitation/FNF.html')">📋 Copy Link</button>
+        <button class="copy-btn" onclick="copyLink('https://heenaazaz.in/FNF.html')">📋 Copy Link</button>
       </div>
       <div class="share-card">
         <div class="share-title">Daawat E Khaas</div>
         <div class="share-desc">All Wedding Events</div>
-        <button class="copy-btn" onclick="copyLink('https://hii2023.github.io/invitation/DaawatEKhaas.html')">📋 Copy Link</button>
+        <button class="copy-btn" onclick="copyLink('https://heenaazaz.in/DaawatEKhaas.html')">📋 Copy Link</button>
+      </div>
+      <div class="share-card">
+        <div class="share-title">Relatives</div>
+        <div class="share-desc">Nikaah, Raati Joga & Reception</div>
+        <button class="copy-btn" onclick="copyLink('https://heenaazaz.in/Relatives.html')">📋 Copy Link</button>
       </div>
     </div>
   </div>
@@ -281,6 +286,7 @@ tr:hover{background:rgba(201,168,76,.05)}
             <option value="Daawat">Daawat</option>
             <option value="Invitation">Invitation</option>
             <option value="Daawat E Khaas">Daawat E Khaas</option>
+            <option value="Relatives">Relatives</option>
           </select>
         </div>
         <button class="add-btn" onclick="addGuest()">Add Guest ✦</button>
@@ -346,7 +352,7 @@ tr:hover{background:rgba(201,168,76,.05)}
 ════════════════════════════════════════════════════ */
 const SCRIPT_URL    = 'https://script.google.com/macros/s/AKfycbxc-VKmEFuKQfQHBPei8Oo0TgbV3zd8sYhsEZWd8jr1qRjMAA9KnIAxsRtOU7hqJMw/exec';
 const ADMIN_PASS    = 'Heena@2026';
-const BASE_URL      = 'https://hii2023.github.io/invitation/';
+const BASE_URL      = 'https://heenaazaz.in/';
 
 /* ════════════════════════════════════════════════════
    GLOBAL STATE
@@ -467,14 +473,15 @@ function sendViaWhatsApp(guestId){
   const pageMap = {
     'Daawat': 'index.html',
     'Invitation': 'FNF.html',
-    'Daawat E Khaas': 'DaawatEKhaas.html'
+    'Daawat E Khaas': 'DaawatEKhaas.html',
+    'Relatives': 'Relatives.html'
   };
 
   const page = pageMap[guest.type];
   const encodedName = encodeURIComponent(guest.name);
   const inviteUrl = BASE_URL + page + '?guest=' + encodedName;
 
-  const message = `As-salamu alaykum ${guest.name}! 🌹\n\nYou are cordially invited to the wedding celebrations of *Heena & Azaz*.\n\n✨ Click your personalised invitation link:\n${inviteUrl}\n\nWe look forward to celebrating with you! 🌸\n\nWith love,\nHeena & Azaz`;
+  const message = `As-salamu alaykum ${guest.name}! 🌹\n\nYou are cordially invited to the wedding celebrations of *Heena & Azaz*.\n\n✨ ${inviteUrl}\n\nWe look forward to celebrating with you! 🌸\n\nWith love,\nHeena & Azaz`;
 
   const waUrl = `https://wa.me/${guest.whatsapp.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
 
@@ -579,13 +586,14 @@ function copyGuestLink(guestId){
   const pageMap = {
     'Daawat': 'index.html',
     'Invitation': 'FNF.html',
-    'Daawat E Khaas': 'DaawatEKhaas.html'
+    'Daawat E Khaas': 'DaawatEKhaas.html',
+    'Relatives': 'Relatives.html'
   };
-  
+
   const page = pageMap[guest.type];
   const encodedName = encodeURIComponent(guest.name);
   const inviteUrl = BASE_URL + page + '?guest=' + encodedName;
-  
+
   navigator.clipboard.writeText(inviteUrl).then(function(){
     alert('Guest link copied to clipboard!');
   });
