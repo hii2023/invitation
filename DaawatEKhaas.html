@@ -226,7 +226,7 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
     <div class="hdr-sp" id="spkWrap"></div>
     <div class="hdr-top">✦ Daawat E Khaas ✦</div>
     <div class="hdr-bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-    <div class="hdr-couple" id="hdrCouple">Heena <span class="hdr-sn">Sejavtawala</span> <span class="heart">♥</span> Azaz <span class="hdr-sn">Vepari</span></div>
+    <div class="hdr-couple" id="hdrCouple">Heena <span class="heart">♥</span> Azaz</div>
     <div class="hdr-note">You are our special guest — we await you with open hearts 🌼</div>
     <div class="minarets">
       <svg viewBox="0 0 30 70"><rect x="12" y="50" width="6" height="20" fill="#c9a84c"/><rect x="8" y="35" width="14" height="16" rx="2" fill="#c9a84c"/><ellipse cx="15" cy="34" rx="8" ry="6" fill="#c9a84c"/><rect x="13" y="10" width="4" height="25" fill="#c9a84c"/><ellipse cx="15" cy="10" rx="4" ry="3" fill="#c9a84c"/></svg>
@@ -477,7 +477,6 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
     <div class="f-text" id="footerTagline">May Allah bless this union with love, joy &amp; colour</div>
     <div class="ornament" style="margin-top:16px">✦ &nbsp; Heena &amp; Azaz &nbsp; ✦</div>
     <div style="font-size:11px;color:var(--soft);margin-top:10px;letter-spacing:2px">27 MARCH – 1 APRIL 2026 · AHMEDABAD</div>
-    <div style="font-size:10px;color:rgba(139,115,85,.4);margin-top:14px;letter-spacing:1px">Powered by <a href="https://axiotrix.com" target="_blank" rel="noopener" style="color:rgba(139,115,85,.55);text-decoration:none">Axiotrix.com</a></div>
   </div>
 
 </div><!-- end #main -->
@@ -589,16 +588,16 @@ document.querySelectorAll('.fi,.ev').forEach(el=>obs.observe(el));
 
 /* ── Language Switcher ── */
 var LANGS={
-  en:{couple:'Heena <span class="hdr-sn">Sejavtawala</span> <span class="heart">♥</span> Azaz <span class="hdr-sn">Vepari</span>',sub:'28 & 29 March 2026',blessing:'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',tag:'May Allah bless this union with love, joy & colour'},
-  gu:{couple:'હીના <span class="hdr-sn">સેજાવતાવાલા</span> <span class="heart">♥</span> એઝાઝ <span class="hdr-sn">વેપારી</span>',sub:'28 & 29 માર્ચ 2026',blessing:'અલ્લાહ તમને બંનેને આશીર્વાદ આપે',tag:'આ પ્રસંગ ખૂબ ખૂબ મુબારક'},
-  ur:{couple:'حنا <span class="hdr-sn">سجاوتاوالا</span> <span class="heart">❤</span> عزاز <span class="hdr-sn">ویپاری</span>',sub:'28 اور 29 مارچ 2026',blessing:'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',tag:'اللہ اس رشتے کو برکت دے'}
+  en:{couple:'Heena ♥ Azaz',sub:'28 & 29 March 2026',blessing:'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',tag:'May Allah bless this union with love, joy & colour'},
+  gu:{couple:'હીના સેજાવતાવાલા ♥ એઝાઝ વેપારી',sub:'28 & 29 માર્ચ 2026',blessing:'અલ્લાહ તમને બંનેને આશીર્વાદ આપે',tag:'આ પ્રસંગ ખૂબ ખૂબ મુબારક'},
+  ur:{couple:'حنا ❤ عزاز',sub:'28 اور 29 مارچ 2026',blessing:'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا',tag:'اللہ اس رشتے کو برکت دے'}
 };
 function setLang(lang,btn){
   document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('on');});
   btn.classList.add('on');
   var L=LANGS[lang];
   var el=function(id){return document.getElementById(id);};
-  if(el('hdrCouple'))el('hdrCouple').innerHTML=L.couple;
+  if(el('hdrCouple'))el('hdrCouple').textContent=L.couple;
   if(el('hdrSub'))el('hdrSub').textContent=L.sub;
   if(el('footerBlessing')){el('footerBlessing').textContent=L.blessing;el('footerBlessing').style.direction=lang==='ur'?'rtl':'ltr';}
   if(el('footerTagline'))el('footerTagline').textContent=L.tag;

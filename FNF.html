@@ -221,7 +221,7 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
     <div class="hdr-sp" id="spkWrap"></div>
     <div class="hdr-top">✦ Invitation ✦</div>
     <div class="hdr-bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-    <div class="hdr-couple" id="hdrCouple">Heena <span class="hdr-sn">Sejavtawala</span> <span class="heart">♥</span> Azaz <span class="hdr-sn">Vepari</span></div>
+    <div class="hdr-couple" id="hdrCouple">Heena <span class="heart">♥</span> Azaz</div>
     <div class="hdr-sub" id="hdrSub">Complete Wedding Celebrations</div>
     <div class="hdr-note">Shared with love, for those closest to our hearts</div>
     <div class="minarets">
@@ -408,7 +408,6 @@ body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--dark);
     <div class="f-text" id="footerTagline">May Allah bless this union with love, peace &amp; happiness</div>
     <div class="ornament" style="margin-top:16px">✦ &nbsp; Heena &amp; Azaz &nbsp; ✦</div>
     <div style="font-size:11px;color:var(--soft);margin-top:10px;letter-spacing:2px">MARCH–APRIL 2026 · AHMEDABAD</div>
-    <div style="font-size:10px;color:rgba(139,115,85,.4);margin-top:14px;letter-spacing:1px">Powered by <a href="https://axiotrix.com" target="_blank" rel="noopener" style="color:rgba(139,115,85,.55);text-decoration:none">Axiotrix.com</a></div>
   </div>
 </div>
 
@@ -512,9 +511,9 @@ document.querySelectorAll('.fi,.ev').forEach(el=>obs.observe(el));
 
 
 var LANGS = {
-  en: { couple: 'Heena <span class="hdr-sn">Sejavtawala</span> <span class="heart">♥</span> Azaz <span class="hdr-sn">Vepari</span>', sub: 'Complete Wedding Celebrations', blessing: 'بَارَكَ اللَّهُ لَكُمَا', tag: 'May Allah bless this union' },
-  gu: { couple: 'હીના <span class="hdr-sn">સેજાવતાવાલા</span> <span class="heart">♥</span> એઝાઝ <span class="hdr-sn">વેપારી</span>', sub: 'સંપૂર્ણ લગ્ન ઉત્સવ', blessing: 'અલ્લાહ તમને બંનેને આશીર્વાદ આપે', tag: 'આ પ્રસંગ ખૂબ ખૂબ મુબારક' },
-  ur: { couple: 'حنا <span class="hdr-sn">سجاوتاوالا</span> <span class="heart">❤</span> عزاز <span class="hdr-sn">ویپاری</span>', sub: 'شادی کی تمام تقریبات', blessing: 'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا', tag: 'اللہ اس رشتے کو برکت دے' }
+  en: { couple: 'Heena ♥ Azaz', sub: 'Complete Wedding Celebrations', blessing: 'بَارَكَ اللَّهُ لَكُمَا', tag: 'May Allah bless this union' },
+  gu: { couple: 'હીના સેજાવતાવાલા ♥ એઝાઝ વેપારી', sub: 'સંપૂર્ણ લગ્ન ઉત્સવ', blessing: 'અલ્લાહ તમને બંનેને આશીર્વાદ આપે', tag: 'આ પ્રસંગ ખૂબ ખૂબ મુબારક' },
+  ur: { couple: 'حنا ❤ عزاز', sub: 'شادی کی تمام تقریبات', blessing: 'بَارَكَ اللَّهُ لَكُمَا وَبَارَكَ عَلَيْكُمَا', tag: 'اللہ اس رشتے کو برکت دے' }
 };
 
 function setLang(lang, btn){
@@ -523,7 +522,7 @@ function setLang(lang, btn){
   var L = LANGS[lang];
   var dir = lang === 'ur' ? 'rtl' : 'ltr';
   var el = function(id){ return document.getElementById(id); };
-  if(el('hdrCouple')) el('hdrCouple').innerHTML = L.couple;
+  if(el('hdrCouple')) el('hdrCouple').textContent = L.couple;
   if(el('hdrSub')) el('hdrSub').textContent = L.sub;
   if(el('footerBlessing')){ el('footerBlessing').textContent = L.blessing; el('footerBlessing').style.direction = dir; }
   if(el('footerTagline')) el('footerTagline').textContent = L.tag;
